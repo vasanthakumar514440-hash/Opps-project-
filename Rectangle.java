@@ -1,25 +1,24 @@
-import java.util.Scanner;
+package assign1;
 
 public class Rectangle {
-    double area(double l, double b) {
-        return l * b; 
+
+        public int area(int side) {
+        return side * side;
     }
-    double area(double s) {
-        return s * s; 
+
+        public int area(int length, int breadth) {
+        return length * breadth;
     }
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Rectangle r = new Rectangle(); 
 
-        System.out.print("Enter length and breadth of rectangle: ");
-        double l = sc.nextDouble();
-        double b = sc.nextDouble();
-        System.out.println("Area of Rectangle: " + r.area(l, b));
+        public double area(double length, double breadth) {
+        return length * breadth;
+    }
 
-        System.out.print("Enter side of square: ");
-        double s = sc.nextDouble();
-        System.out.println("Area of Square: " + r.area(s));
+       public static void main(String[] args) {
+        Rectangle rect = new Rectangle();
 
-        sc.close();
+        System.out.println("Area of square: " + rect.area(5));
+        System.out.println("Area of rectangle (int): " + rect.area(5, 10));
+        System.out.println("Area of rectangle (double): " + rect.area(5.5, 3.2));
     }
 }
