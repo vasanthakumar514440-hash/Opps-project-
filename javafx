@@ -1,0 +1,40 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
+public class ColorPickerApp extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        // Create a ColorPicker
+        ColorPicker colorPicker = new ColorPicker(Color.BLUE);
+
+        // Rectangle to show selected color
+        Rectangle colorDisplay = new Rectangle(200, 100, colorPicker.getValue());
+
+        // When color is changed, update the rectangle color
+        colorPicker.setOnAction(e -> {
+            Color selectedColor = colorPicker.getValue();
+            colorDisplay.setFill(selectedColor);
+        });
+
+        // Layout
+        VBox layout = new VBox(15);
+        layout.setStyle("-fx-padding: 20; -fx-alignment: center;");
+        layout.getChildren().addAll(colorPicker, colorDisplay);
+
+        // Scene setup
+        Scene scene = new Scene(layout, 300, 200);
+        primaryStage.setTitle("JavaFX Color Picker");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
