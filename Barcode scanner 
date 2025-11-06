@@ -1,0 +1,56 @@
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
+import java.util.stream.*;
+
+class Product {
+    private String barcode, name;
+    private double price;
+    public Product(String b, String n, double p){ barcode=b; name=n; price=p; }
+    public String toString(){ return name+" , Rs: "+price; }
+}
+
+class Database<T> {
+    private Map<String, T> data = new HashMap<>();
+    public void add(String k, T v){ data.put(k,v); }
+    public Optional<T> find(String k){ return Optional.ofNullable(data.get(k)); }
+}
+
+class InvalidBarcodeException extends Exception {
+    public InvalidBarcodeException(String msg){ super(msg); }
+}
+
+class ScanThread extends Thread {
+    private String code; private Database<Product> db; private JTextArea output;
+    public ScanThread(String c, Database<Product> d, JTextArea o){ code=c; db=d; output=o; }
+    public void run(){
+        try {
+            output.setText("⏳ Scanning...\n");
+            Thread.sleep(1000);
+            Product p = db.find(code)
+                .orElseThrow(() -> new InvalidBarcodeException("❌ Invalid Barcode! Product not found."));
+            output.append("\n✅ Product Found: " + p);
+        } catch(Exception e){ output.append(e.getMessage()); }
+    }
+}
+
+public class BarcodeScannerGUI {
+    Database<Product> db = new Database<>();
+    public BarcodeScannerGUI(){
+        db.add("8901234567890", new Product("8901234567890", "Colgate Toothpaste", 40));
+        db.add("8909876543210", new Product("8909876543210", "Dairy Milk Chocolate", 75));
+        // (Add 33 more products here)
+    }
+    public static void main(String[] args){ SwingUtilities.invokeLater(() -> new BarcodeScannerGUI().UI()); }
+    public void UI(){
+        JFrame f=new JFrame("Barcode Scanner");
+        JTextField t=new JTextField(); JTextArea o=new JTextArea();
+        JButton b=new JButton("Scan");
+        b.addActionListener(e -> new ScanThread(t.getText(), db, o).start());
+        f.add(new JLabel("Enter Barcode:"), BorderLayout.NORTH);
+        f.add(t, BorderLayout.CENTER);
+        f.add(b, BorderLayout.EAST);
+        f.add(new JScrollPane(o), BorderLayout.SOUTH);
+        f.setSize(400,300); f.setVisible(true);
+    }
+}
